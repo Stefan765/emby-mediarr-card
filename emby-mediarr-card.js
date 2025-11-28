@@ -115,7 +115,7 @@ class MediarrCard extends HTMLElement {
     }
 
     this.config = {
-      max_items: 20,
+      max_items: 40,
       days_to_check: 60,
       ...config
     };
@@ -140,7 +140,7 @@ class MediarrCard extends HTMLElement {
 
   static getStubConfig() {
     return {
-      max_items: 20,
+      max_items: 40,
       days_to_check: 60,
       emby_movies_entity: 'sensor.emby_movies_mediarr',
       emby_movies_label: 'Emby Movies',
