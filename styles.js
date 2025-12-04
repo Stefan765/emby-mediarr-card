@@ -1,11 +1,6 @@
 // styles.js
 export const styles = `
   :root {
-    --cover-width: 55px;
-    --cover-height: 105px;
-    --cover-width-mobile: 55px;
-    --cover-height-mobile: 105px;
-
     --card-padding: 0;
     --section-spacing: 8px;
     --item-spacing: 4px;
@@ -188,8 +183,8 @@ export const styles = `
   /* Media Items */
   .media-item {
     flex: 0 0 auto;
-    width: var(--cover-width);
-    height: var(--cover-height);
+    width: 95px;
+    height: 145px;
     position: relative;
     cursor: pointer;
     transform: translateY(0);
@@ -502,8 +497,8 @@ export const styles = `
     }
 
     .media-item {
-      width: var(--cover-width-mobile);
-      height: var(--cover-height-mobile);
+      width: 95px;
+      height: 138px;
     }
     
     .request-button {
