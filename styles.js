@@ -1,6 +1,9 @@
 // styles.js
 export const styles = `
   :root {
+    --cover-width: 120px;
+    --cover-height: 190px;
+
     --card-padding: 0;
     --section-spacing: 8px;
     --item-spacing: 4px;
@@ -183,8 +186,8 @@ export const styles = `
   /* Media Items */
   .media-item {
     flex: 0 0 auto;
-    width: 85px;
-    height: 135px;
+    width: var(--cover-width);
+    height: var(--cover-height);
     position: relative;
     cursor: pointer;
     transform: translateY(0);
