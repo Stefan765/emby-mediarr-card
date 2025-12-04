@@ -1,10 +1,10 @@
 // styles.js
 export const styles = `
   :root {
-    --cover-width: 95px;
-    --cover-height: 145px;
-    --cover-width-mobile: 95px;
-    --cover-height-mobile: 145px;
+    --cover-width: 55px;
+    --cover-height: 105px;
+    --cover-width-mobile: 55px;
+    --cover-height-mobile: 105px;
 
     --card-padding: 0;
     --section-spacing: 8px;
