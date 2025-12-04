@@ -183,8 +183,8 @@ export const styles = `
   /* Media Items */
   .media-item {
     flex: 0 0 auto;
-    width: 95px;
-    height: 145px;
+    width: 85px;
+    height: 135px;
     position: relative;
     cursor: pointer;
     transform: translateY(0);
@@ -497,8 +497,8 @@ export const styles = `
     }
 
     .media-item {
-      width: 95px;
-      height: 138px;
+      width: 85px;
+      height: 128px;
     }
     
     .request-button {
