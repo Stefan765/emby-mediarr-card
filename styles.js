@@ -3,6 +3,8 @@ export const styles = `
   :root {
     --cover-width: 120px;
     --cover-height: 190px;
+    --cover-width-mobile: 100px;
+    --cover-height-mobile: 160px;
 
     --card-padding: 0;
     --section-spacing: 8px;
@@ -500,8 +502,8 @@ export const styles = `
     }
 
     .media-item {
-      width: 85px;
-      height: 128px;
+      width: var(--cover-width-mobile);
+      height: var(--cover-height-mobile);
     }
     
     .request-button {
