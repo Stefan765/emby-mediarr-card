@@ -1,4 +1,3 @@
-// main-card.js
 import { EmbyMoviesSection } from './emby-movies-section.js';
 import { EmbySeriesSection } from './emby-series-section.js';
 import { styles } from './styles.js';
@@ -34,6 +33,33 @@ class MediarrCard extends HTMLElement {
       icon.style.transform = 'rotate(-90deg)';
     }
   }
+
+  // -----------------------------------------------------
+  // ✅ NEU: Automatisch ersten Eintrag auswählen, wenn keiner gesetzt ist
+  // -----------------------------------------------------
+  _setDefaultSelectionIfEmpty(hass) {
+    if (this.selectedType !== null) return;
+
+    const configKeys = Object.keys(this.config)
+      .filter(key => key.endsWith('_entity') && this.config[key]?.length > 0)
+      .filter(key => key === 'emby_movies_entity' || key === 'emby_series_entity');
+
+    const orderedSections = configKeys.map(key =>
+      key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series'
+    );
+
+    const firstSection = orderedSections[0];
+    const entityId = this.config[`${firstSection}_entity`];
+    const state = hass.states[entityId];
+
+    if (state?.attributes?.data?.length > 0) {
+      const data = state.attributes.data[0];
+      this.selectedType = firstSection;
+      this.selectedIndex = 0;
+      this.sections[firstSection].updateInfo(this, data);
+    }
+  }
+  // -----------------------------------------------------
 
   initializeCard(hass) {
     // 🔍 Nur emby_movies_entity und emby_series_entity berücksichtigen
@@ -90,6 +116,11 @@ class MediarrCard extends HTMLElement {
         section.updateInfo(this, data);
       }
     }
+
+    // -----------------------------------------
+    // ✅ NEU: Falls noch nichts ausgewählt → ersten Eintrag setzen
+    // -----------------------------------------
+    this._setDefaultSelectionIfEmpty(hass);
   }
 
   set hass(hass) {
@@ -104,6 +135,11 @@ class MediarrCard extends HTMLElement {
         this.sections[key].update(this, hass.states[entityId]);
       }
     });
+
+    // -----------------------------------------
+    // ✅ NEU: Auch bei Updates → automatisch ersten Film wählen, wenn keiner gewählt ist
+    // -----------------------------------------
+    this._setDefaultSelectionIfEmpty(hass);
   }
 
   setConfig(config) {
