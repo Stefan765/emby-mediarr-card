@@ -122,7 +122,8 @@ class MediarrCard extends HTMLElement {
     // -----------------------------------------
     // NEU: Erst nach DOM-Render ausführen
     // -----------------------------------------
-    setTimeout(() => this._setDefaultSelectionIfEmpty(hass), 0);
+    // wartet, bis der Browser den DOM gezeichnet hat
+    requestAnimationFrame(() => this._setDefaultSelectionIfEmpty(hass));
   }
 
   set hass(hass) {
@@ -141,7 +142,7 @@ class MediarrCard extends HTMLElement {
     // -----------------------------------------
     // NEU: Auch hier verzögert → funktioniert IMMER
     // -----------------------------------------
-    setTimeout(() => this._setDefaultSelectionIfEmpty(hass), 0);
+    requestAnimationFrame(() => this._setDefaultSelectionIfEmpty(hass));
   }
 
   setConfig(config) {
