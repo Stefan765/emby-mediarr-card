@@ -35,7 +35,7 @@ class MediarrCard extends HTMLElement {
   }
 
   // -----------------------------------------------------
-  // ✅ NEU: Automatisch ersten Eintrag auswählen, wenn keiner gesetzt ist
+  // Automatisch ersten Eintrag auswählen, wenn keiner gesetzt ist
   // -----------------------------------------------------
   _setDefaultSelectionIfEmpty(hass) {
     if (this.selectedType !== null) return;
@@ -67,7 +67,9 @@ class MediarrCard extends HTMLElement {
       .filter(key => key.endsWith('_entity') && this.config[key]?.length > 0)
       .filter(key => key === 'emby_movies_entity' || key === 'emby_series_entity');
 
-    const orderedSections = configKeys.map(key => key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series');
+    const orderedSections = configKeys.map(key =>
+      key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series'
+    );
 
     this.innerHTML = `
       <ha-card>
@@ -118,9 +120,9 @@ class MediarrCard extends HTMLElement {
     }
 
     // -----------------------------------------
-    // ✅ NEU: Falls noch nichts ausgewählt → ersten Eintrag setzen
+    // NEU: Erst nach DOM-Render ausführen
     // -----------------------------------------
-    this._setDefaultSelectionIfEmpty(hass);
+    setTimeout(() => this._setDefaultSelectionIfEmpty(hass), 0);
   }
 
   set hass(hass) {
@@ -137,9 +139,9 @@ class MediarrCard extends HTMLElement {
     });
 
     // -----------------------------------------
-    // ✅ NEU: Auch bei Updates → automatisch ersten Film wählen, wenn keiner gewählt ist
+    // NEU: Auch hier verzögert → funktioniert IMMER
     // -----------------------------------------
-    this._setDefaultSelectionIfEmpty(hass);
+    setTimeout(() => this._setDefaultSelectionIfEmpty(hass), 0);
   }
 
   setConfig(config) {
