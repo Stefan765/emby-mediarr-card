@@ -34,42 +34,12 @@ class MediarrCard extends HTMLElement {
     }
   }
 
-  // -----------------------------------------------------
-  // Automatisch ersten Eintrag auswählen, wenn keiner gesetzt ist
-  // -----------------------------------------------------
-  _setDefaultSelectionIfEmpty(hass) {
-    if (this.selectedType !== null) return;
-
-    const configKeys = Object.keys(this.config)
-      .filter(key => key.endsWith('_entity') && this.config[key]?.length > 0)
-      .filter(key => key === 'emby_movies_entity' || key === 'emby_series_entity');
-
-    const orderedSections = configKeys.map(key =>
-      key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series'
-    );
-
-    const firstSection = orderedSections[0];
-    const entityId = this.config[`${firstSection}_entity`];
-    const state = hass.states[entityId];
-
-    if (state?.attributes?.data?.length > 0) {
-      const data = state.attributes.data[0];
-      this.selectedType = firstSection;
-      this.selectedIndex = 0;
-      this.sections[firstSection].updateInfo(this, data);
-    }
-  }
-  // -----------------------------------------------------
-
   initializeCard(hass) {
-    // 🔍 Nur emby_movies_entity und emby_series_entity berücksichtigen
     const configKeys = Object.keys(this.config)
       .filter(key => key.endsWith('_entity') && this.config[key]?.length > 0)
       .filter(key => key === 'emby_movies_entity' || key === 'emby_series_entity');
 
-    const orderedSections = configKeys.map(key =>
-      key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series'
-    );
+    const orderedSections = configKeys.map(key => key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series');
 
     this.innerHTML = `
       <ha-card>
@@ -104,26 +74,6 @@ class MediarrCard extends HTMLElement {
         this._toggleSection(sectionKey);
       };
     });
-
-    // 🎬 Hintergrund initialisieren
-    const firstSectionKey = orderedSections[0];
-    const entityId = this.config[`${firstSectionKey}_entity`];
-    if (entityId && hass.states[entityId]) {
-      const state = hass.states[entityId];
-      if (state.attributes.data?.[0]) {
-        const data = state.attributes.data[0];
-        const section = this.sections[firstSectionKey];
-        this.selectedType = firstSectionKey;
-        this.selectedIndex = 0;
-        section.updateInfo(this, data);
-      }
-    }
-
-    // -----------------------------------------
-    // NEU: Erst nach DOM-Render ausführen
-    // -----------------------------------------
-    // wartet, bis der Browser den DOM gezeichnet hat
-    requestAnimationFrame(() => this._setDefaultSelectionIfEmpty(hass));
   }
 
   set hass(hass) {
@@ -134,15 +84,25 @@ class MediarrCard extends HTMLElement {
     // 🔄 Nur emby aktualisieren
     ['emby_movies', 'emby_series'].forEach(key => {
       const entityId = this.config[`${key}_entity`];
-      if (entityId && hass.states[entityId]) {
-        this.sections[key].update(this, hass.states[entityId]);
+      const state = hass.states[entityId];
+      if (entityId && state) {
+        this.sections[key].update(this, state);
       }
     });
 
-    // -----------------------------------------
-    // NEU: Auch hier verzögert → funktioniert IMMER
-    // -----------------------------------------
-    requestAnimationFrame(() => this._setDefaultSelectionIfEmpty(hass));
+    // ---------------------------
+    // Auto-Select nur, wenn Daten existieren und noch nichts ausgewählt
+    // ---------------------------
+    ['emby_movies', 'emby_series'].forEach(key => {
+      const entityId = this.config[`${key}_entity`];
+      const state = hass.states[entityId];
+      if (state?.attributes?.data?.length > 0 && this.selectedType === null) {
+        const data = state.attributes.data[0];
+        this.selectedType = key;
+        this.selectedIndex = 0;
+        this.sections[key].updateInfo(this, data);
+      }
+    });
   }
 
   setConfig(config) {
