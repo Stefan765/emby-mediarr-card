@@ -9,7 +9,7 @@ class MediarrCard extends HTMLElement {
     this.selectedIndex = 0;
     this.collapsedSections = new Set();
 
-    // ✅ Nur emby aktiv
+    // Einzig aktivierte Sektionen
     this.sections = {
       emby_movies: new EmbyMoviesSection(),
       emby_series: new EmbySeriesSection()
@@ -22,7 +22,7 @@ class MediarrCard extends HTMLElement {
 
     const content = section.querySelector('.section-content');
     const icon = section.querySelector('.section-toggle-icon');
-    
+
     if (this.collapsedSections.has(sectionKey)) {
       this.collapsedSections.delete(sectionKey);
       content.classList.remove('collapsed');
@@ -39,7 +39,9 @@ class MediarrCard extends HTMLElement {
       .filter(key => key.endsWith('_entity') && this.config[key]?.length > 0)
       .filter(key => key === 'emby_movies_entity' || key === 'emby_series_entity');
 
-    const orderedSections = configKeys.map(key => key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series');
+    const orderedSections = configKeys.map(key =>
+      key.startsWith('emby_movies') ? 'emby_movies' : 'emby_series'
+    );
 
     this.innerHTML = `
       <ha-card>
@@ -56,13 +58,13 @@ class MediarrCard extends HTMLElement {
       </ha-card>
     `;
 
-    // Grundelemente
+    // Referenzen setzen
     this.content = this.querySelector('.media-content');
     this.background = this.querySelector('.media-background');
     this.cardBackground = this.querySelector('.card-background');
     this.info = this.querySelector('.media-info');
 
-    // 🎨 Styles laden
+    // Styles laden
     const style = document.createElement('style');
     style.textContent = styles;
     this.appendChild(style);
@@ -81,7 +83,10 @@ class MediarrCard extends HTMLElement {
       this.initializeCard(hass);
     }
 
-    // 🔄 Nur emby aktualisieren
+    // Fallback-GIF (nur wenn nichts ausgewählt ist)
+    this._fallbackGif = "https://share.google/wnZykVquKdWGiT2LJ";
+
+    // Nur Emby aktualisieren
     ['emby_movies', 'emby_series'].forEach(key => {
       const entityId = this.config[`${key}_entity`];
       const state = hass.states[entityId];
@@ -90,12 +95,11 @@ class MediarrCard extends HTMLElement {
       }
     });
 
-    // ---------------------------
-    // Auto-Select nur, wenn Daten existieren und noch nichts ausgewählt
-    // ---------------------------
+    // Wenn noch nichts ausgewählt ist → automatisch ersten Film/Serie setzen
     ['emby_movies', 'emby_series'].forEach(key => {
       const entityId = this.config[`${key}_entity`];
       const state = hass.states[entityId];
+
       if (state?.attributes?.data?.length > 0 && this.selectedType === null) {
         const data = state.attributes.data[0];
         this.selectedType = key;
@@ -103,6 +107,11 @@ class MediarrCard extends HTMLElement {
         this.sections[key].updateInfo(this, data);
       }
     });
+
+    // GIF anzeigen, wenn GAR NICHTS ausgewählt ist
+    if (this.selectedType === null) {
+      this.background.style.backgroundImage = `url('${this._fallbackGif}')`;
+    }
   }
 
   setConfig(config) {
