@@ -49,21 +49,25 @@ export const styles = `
     left: 0;
     right: 0;
     bottom: 0;
-    background-size: cover;
-    background-position: center;
     transition: all var(--transition-duration) ease-in-out;
   }
 
   .card-background {
+    background-size: cover;
+    background-position: center;
     filter: blur(20px) brightness(0.7);
     transform: scale(1.2);
     z-index: 0;
   }
 
+  /* ⬇️ FIXED: Hintergrund nicht mehr abgeschnitten */
   .media-background {
+    background-size: contain;        /* GANZES Bild sichtbar */
+    background-repeat: no-repeat;    /* keine Kachelung */
+    background-position: center center; /* sauber zentriert */
     filter: blur(var(--blur-radius, 0px));
-    transform: scale(1.1);
-    opacity: 0.3;
+    opacity: 0.35;
+    transform: scale(1);             /* kein Zoom */
   }
 
   /* Media Content Area */
@@ -77,7 +81,7 @@ export const styles = `
   }
 
   .media-content:hover .media-background {
-    transform: scale(1.15);
+    transform: scale(1.05);
   }
 
   .media-info {
@@ -141,7 +145,7 @@ export const styles = `
     transform: scaleY(0);
   }
 
-  /* Media Lists - Shared */
+  /* Media Lists */
   [class*="-list"] {
     padding: 0px 4px;
     display: flex;
@@ -154,7 +158,7 @@ export const styles = `
     margin-top: 0px;
   }
 
-  /* Scrollbar Styling */
+  /* Scrollbars */
   [class*="-list"]::-webkit-scrollbar {
     height: 2px;
   }
@@ -168,15 +172,15 @@ export const styles = `
     background: var(--primary-color);
     border-radius: 2px;
   }
-  /* Hide scrollbars on mobile */
+
   @media (max-width: 600px) {
     [class*="-list"] {
-        scrollbar-width: none;  /* Firefox */
-        -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;
+      -ms-overflow-style: none;
     }
-    
+
     [class*="-list"]::-webkit-scrollbar {
-        display: none;  /* Chrome, Safari and Opera */
+      display: none;
     }
   }
 
@@ -188,8 +192,9 @@ export const styles = `
     position: relative;
     cursor: pointer;
     transform: translateY(0);
-    transition: transform var(--transition-duration) ease-out, 
-                box-shadow var(--transition-duration) ease-out;
+    transition:
+      transform var(--transition-duration) ease-out,
+      box-shadow var(--transition-duration) ease-out;
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
@@ -242,7 +247,7 @@ export const styles = `
     font-weight: 500;
   }
 
-  /* Content Typography */
+  /* Info Content */
   .title {
     font-size: var(--title-size);
     font-weight: 500;
@@ -251,7 +256,7 @@ export const styles = `
   }
 
   .summary {
-    font-size: 0.75em; /* Schriftgröße kleiner – kannst z. B. 0.7em oder 0.9em wählen */
+    font-size: 0.75em;
     opacity: 0.85;
     margin-top: 6px;
     line-height: 1.3;
@@ -259,10 +264,9 @@ export const styles = `
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; /* Anzahl der sichtbaren Zeilen */
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
-
 
   .details {
     display: flex;
@@ -283,7 +287,7 @@ export const styles = `
     overflow: hidden;
   }
 
-  /* Empty State */
+  /* Empty Section */
   .empty-section-content {
     padding: 16px;
     text-align: center;
@@ -304,8 +308,9 @@ export const styles = `
     border-radius: var(--border-radius);
     font-size: var(--subtitle-size);
     cursor: pointer;
-    transition: transform var(--transition-duration) ease,
-                box-shadow var(--transition-duration) ease;
+    transition:
+      transform var(--transition-duration) ease,
+      box-shadow var(--transition-duration) ease;
   }
 
   .status:hover {
@@ -480,7 +485,7 @@ export const styles = `
     display: none !important;
   }
 
-  /* Responsive Design */
+  /* Responsive */
   @media (min-width: 600px) {
     .media-content {
       height: 140px;
@@ -500,13 +505,13 @@ export const styles = `
       width: 85px;
       height: 128px;
     }
-    
+
     .request-button {
       padding: 8px 14px;
     }
   }
 
-  /* Theme Adaptations */
+  /* Themes */
   @media (prefers-color-scheme: dark) {
     .section-header:hover {
       background-color: rgba(255, 255, 255, 0.1);
@@ -526,6 +531,7 @@ export const styles = `
       background: #ffffff;
     }
   }
+
   .media-item-footer {
     display: flex;
     justify-content: space-between;
@@ -542,7 +548,7 @@ export const styles = `
     gap: 6px;
     display: flex;
     align-items: center;
-    gap: 6px; /* Abstand zwischen Rating und Button */
+    gap: 6px;
     font-size: var(--subtitle-size);
     opacity: 0.9;
   }
@@ -564,6 +570,7 @@ export const styles = `
     transform: scale(1.2);
     color: #ff79a8;
   }
+
   .fav-btn.favorited {
     color: #ff4081;
   }
