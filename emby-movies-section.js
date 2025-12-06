@@ -80,22 +80,27 @@ export class EmbyMoviesSection extends BaseSection {
    */
   generateMediaItem(item, index, selectedType, selectedIndex) {
     if (!item || !item.poster || !item.title) return '';
-
+  
     const itemId = item.id || item.Id || '';
     const isFavorite = this._favoriteIds.has(itemId);
     const heartIcon = isFavorite ? 'mdi:heart' : 'mdi:heart-outline';
     const favClass = isFavorite ? 'favorited' : '';
-
+  
     return `
       <div class="media-item ${selectedType === this.key && index === selectedIndex ? 'selected' : ''}"
            data-type="${this.key}"
            data-index="${index}">
         <img src="${item.poster}" alt="${item.title}">
         <div class="media-item-title">${item.title}</div>
+  
         <div class="media-item-footer">
           ${item.rating ? `<span class="rating">⭐ ${item.rating}</span>` : ''}
+          
+          <button class="fav-btn ${favClass}"
+                  data-id="${itemId}">
+              <ha-icon icon="${heartIcon}"></ha-icon>
+          </button>
         </div>
       </div>
     `;
   }
-}
