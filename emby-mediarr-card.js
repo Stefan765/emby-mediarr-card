@@ -9,7 +9,6 @@ class MediarrCard extends HTMLElement {
     this.selectedIndex = 0;
     this.collapsedSections = new Set();
 
-    // Einzig aktivierte Sektionen
     this.sections = {
       emby_movies: new EmbyMoviesSection(),
       emby_series: new EmbySeriesSection()
@@ -58,18 +57,15 @@ class MediarrCard extends HTMLElement {
       </ha-card>
     `;
 
-    // Referenzen setzen
     this.content = this.querySelector('.media-content');
     this.background = this.querySelector('.media-background');
     this.cardBackground = this.querySelector('.card-background');
     this.info = this.querySelector('.media-info');
 
-    // Styles laden
     const style = document.createElement('style');
     style.textContent = styles;
     this.appendChild(style);
 
-    // Klick-Handler für Sektionen
     this.querySelectorAll('.section-header').forEach(header => {
       header.onclick = () => {
         const sectionKey = header.closest('[data-section]').dataset.section;
@@ -83,34 +79,30 @@ class MediarrCard extends HTMLElement {
       this.initializeCard(hass);
     }
 
-    // Fallback-GIF (nur wenn nichts ausgewählt ist)
-    this._fallbackGif = "https://share.google/wnZykVquKdWGiT2LJ";
+    // Dein Fallback-Bild
+    this._fallbackImage =
+      "https://emby.media/community/uploads/inline/76/55764c544d443_embywallpaper.jpg";
 
-    // Nur Emby aktualisieren
+    let hasSelectedContent = false;
+
+    // Emby Daten aktualisieren
     ['emby_movies', 'emby_series'].forEach(key => {
       const entityId = this.config[`${key}_entity`];
       const state = hass.states[entityId];
+
       if (entityId && state) {
         this.sections[key].update(this, state);
+
+        // Prüfen, ob updateInfo bereits ein Bild gesetzt hat
+        if (this.selectedType === key) {
+          hasSelectedContent = true;
+        }
       }
     });
 
-    // Wenn noch nichts ausgewählt ist → automatisch ersten Film/Serie setzen
-    ['emby_movies', 'emby_series'].forEach(key => {
-      const entityId = this.config[`${key}_entity`];
-      const state = hass.states[entityId];
-
-      if (state?.attributes?.data?.length > 0 && this.selectedType === null) {
-        const data = state.attributes.data[0];
-        this.selectedType = key;
-        this.selectedIndex = 0;
-        this.sections[key].updateInfo(this, data);
-      }
-    });
-
-    // GIF anzeigen, wenn GAR NICHTS ausgewählt ist
-    if (this.selectedType === null) {
-      this.background.style.backgroundImage = `url('${this._fallbackGif}')`;
+    // Fallback anzeigen, wenn keine Auswahl existiert
+    if (!hasSelectedContent && this.selectedType === null) {
+      this.background.style.backgroundImage = `url('${this._fallbackImage}')`;
     }
   }
 
