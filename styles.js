@@ -62,9 +62,9 @@ export const styles = `
 
   /* ⬇️ FIXED: Hintergrund nicht mehr abgeschnitten */
   .media-background {
-    background-size: 100% auto;        /* GANZES Bild sichtbar */
+    background-size: cover;        /* GANZES Bild sichtbar */
     background-repeat: no-repeat;    /* keine Kachelung */
-    background-position: center center; /* sauber zentriert */
+    background-position: center bottom; /* sauber zentriert */
     filter: blur(var(--blur-radius, 0px));
     opacity: 0.35;
     transform: scale(1);             /* kein Zoom */
