@@ -81,7 +81,7 @@ class MediarrCard extends HTMLElement {
 
     // Dein Fallback-Bild
     this._fallbackImage =
-      "https://emby.media/community/uploads/inline/76/55764c544d443_embywallpaper.jpg";
+      "https://emby.media/community/uploads/inline/76/584829879112e_WATER.jpg";
 
     let hasSelectedContent = false;
 
