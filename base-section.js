@@ -146,9 +146,11 @@ export class BaseSection {
         if (isFav) {
           await this.addToFavorites(cardInstance, itemId);
           this._favoriteIds.add(itemId);
+          this._lastFavoritesUpdate = Date.now();
         } else {
           await this.removeFromFavorites(cardInstance, itemId);
           this._favoriteIds.delete(itemId);
+          this._lastFavoritesUpdate = Date.now();
         }
       });
     });
