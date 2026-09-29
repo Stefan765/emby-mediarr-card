@@ -73,9 +73,8 @@ export class BaseSection {
     const genres = item.genres || item.Genres?.join(", ") || "";
     const studio = item.studio || item.Studios?.[0]?.Name || "";
     const rating = item.rating || item.CommunityRating || "";
-    const runtime = item.runtime || item.RunTimeMinutes ? `${item.RunTimeMinutes} min` : "";
-    const summary =
-      item.summary || item.Overview || item.Plot || "Keine Beschreibung verfügbar.";
+    const runtime = item.runtime ?? (item.RunTimeMinutes != null ? `${item.RunTimeMinutes} min` : "");
+    const summary = item.summary || item.Overview || item.Plot || "Keine Beschreibung verfügbar.";
 
     // 🎨 HTML für Info-Bereich
     cardInstance.info.innerHTML = `
