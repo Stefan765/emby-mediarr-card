@@ -59,6 +59,9 @@ export class EmbyMoviesSection extends BaseSection {
             this._favoriteIds.delete(itemId);
           }
 
+// Favoriten-Cache gilt ab jetzt wieder als aktuell
+this._lastFavoritesUpdate = Date.now();
+
           // 🩶 Synchronisiere mit der Liste (Fix: richtiges List-Element!)
           const listBtn = cardInstance.querySelector(`.emby_movies-list .fav-btn[data-id="${itemId}"]`);
           if (listBtn) {
