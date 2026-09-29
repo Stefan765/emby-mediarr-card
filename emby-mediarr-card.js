@@ -121,13 +121,11 @@ class MediarrCard extends HTMLElement {
     };
 
     ['emby_movies', 'emby_series'].forEach(section => {
-      this.config[`${section}_max_items`] =
-        this.config[`${section}_max_items`] || this.config.max_items;
+      this.config[`${section}_max_items`] ??= this.config.max_items;
     });
 
     ['emby_series'].forEach(section => {
-      this.config[`${section}_days_to_check`] =
-        this.config[`${section}_days_to_check`] || this.config.days_to_check;
+      this.config[`${section}_days_to_check`] ??= this.config.days_to_check;
     });
 
     if (config.emby_movies_url && !config.emby_movies_url.endsWith('/')) {
